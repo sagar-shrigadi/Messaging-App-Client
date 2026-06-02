@@ -12,7 +12,7 @@ const useAllUsers = () => {
         const json = await res.json();
 
         if (!res.ok) {
-          throw new Error(res.data.message);
+          throw new Error(json.message);
         }
         setUsers(json.data);
       } catch (err) {
@@ -26,5 +26,32 @@ const useAllUsers = () => {
   }, []);
   return { users, error, loading };
 };
+const useGlobalMessages = () => {
+  const [messages, setMessages] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-export default useAllUsers;
+  useEffect(() => {
+    const fetchAllGlobalMessages = async () => {
+      try {
+        const res = await fetch(
+          `${import.meta.env.VITE_SERVER_URL}/chats/global`,
+        );
+        const json = await res.json();
+
+        if (!res.ok) {
+          throw new Error(json.message);
+        }
+        setMessages(json.data);
+      } catch (err) {
+        console.error("service get all global messages", err);
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchAllGlobalMessages();
+  }, []);
+  return { messages, loading, error };
+};
+export { useAllUsers, useGlobalMessages };

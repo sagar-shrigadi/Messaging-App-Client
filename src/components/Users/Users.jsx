@@ -1,9 +1,9 @@
 import profile from "../../assets/defaultProfile.png";
-import useAllUsers from "../../service/user/user";
+import { useAllUsers } from "../../service/user/user";
 
 const Users = () => {
   const { users, error, loading } = useAllUsers();
-  console.log(users);
+  // console.log(users);
 
   if (loading)
     return (
@@ -22,7 +22,7 @@ const Users = () => {
   return (
     <section className="flex flex-col gap-6 border min-w-80 sm:py-1">
       <h1 className="font-bold text-3xl px-2">Users</h1>
-      <section className="scroll-y">
+      <section className="overflow-y-scroll max-h-dvh">
         {users.map((u) => (
           <article
             key={u.id}
