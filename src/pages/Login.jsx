@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import LogUser from "../../service/auth/login";
+import LogUser from "../service/auth/login";
 import { Link, useNavigate } from "react-router";
 
 const Login = () => {
@@ -22,12 +22,9 @@ const Login = () => {
     navigate("/");
   };
   return (
-    <section className="flex flex-col gap-4 items-center justify-center m-auto p-4">
+    <section className="flex flex-col gap-4 items-center justify-center m-auto p-4 w-dvw max-w-136">
       <h1 className="text-4xl mr-auto">Welcome Back</h1>
-      <form
-        onSubmit={handleSubmit}
-        className="w-dvw py-5 flex flex-col gap-5 h-fit md:w-136"
-      >
+      <form onSubmit={handleSubmit} className="w-full py-5 flex flex-col gap-5">
         <div className="flex-1 flex flex-col ">
           <label htmlFor="username">Username</label>
           <input
