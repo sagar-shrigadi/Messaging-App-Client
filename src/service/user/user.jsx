@@ -54,4 +54,38 @@ const useGlobalMessages = () => {
   }, []);
   return { messages, loading, error };
 };
-export { useAllUsers, useGlobalMessages };
+const useMessagesBetweenUsers = (userId, token) => {
+  const [messages, setMessages] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  useEffect(() => {
+    const fetchAllGlobalMessages = async () => {
+      try {
+        if (userId === undefined) return { messages: false };
+        const res = await fetch(
+          `${import.meta.env.VITE_SERVER_URL}/chats/users/${userId}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
+        const json = await res.json();
+
+        if (!res.ok) {
+          throw new Error(json.message);
+        }
+        setMessages(json.data);
+      } catch (err) {
+        console.error("service get all global messages", err);
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchAllGlobalMessages();
+  }, [userId, token]);
+  return { messages, loading, error };
+};
+export { useAllUsers, useGlobalMessages, useMessagesBetweenUsers };
