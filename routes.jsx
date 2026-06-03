@@ -1,8 +1,8 @@
 import { createBrowserRouter } from "react-router";
 import App from "./src/App";
-import Login from "./src/components/auth/Login";
 import GlobalChat from "./src/pages/GlobalChat";
 import UsersChat from "./src/pages/UsersChat";
+import Login from "./src/pages/Login";
 
 const routes = createBrowserRouter([
   {
