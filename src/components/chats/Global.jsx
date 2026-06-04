@@ -29,7 +29,7 @@ const Global = () => {
       <div className="text-3xl p-2 flex items-center">
         <h2 className="font-bold">Global Chat</h2>
       </div>
-      <section className="overflow-y-scroll border grow pb-2">
+      <section className="max-h-[79.5dvh] sm:max-h-[unset] overflow-y-scroll border grow pb-2">
         {messages.map((msg) =>
           msg.authorId === user?.id ? (
             <article
