@@ -1,10 +1,13 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import LogUser from "../service/auth/login";
 import { Link, useNavigate } from "react-router";
 
 const Login = () => {
+  const [validationError, setValidationError] = useState([]);
+  const [credentialsError, setCredentialsError] = useState("");
   const btnRef = useRef(null);
   let navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -16,10 +19,21 @@ const Login = () => {
 
     const res = await LogUser({ username, password });
 
-    if (!res.error) {
-      localStorage.setItem("token", res.token);
+    if (res.success) {
+      localStorage.setItem("token", res.data);
+      navigate("/");
+    } else {
+      btnRef.current.textContent = "Log in";
+      // console.log("errors in login b4 state", res);
+
+      if (res.message === "Validation Failed!") {
+        setCredentialsError("");
+        setValidationError(res.errors);
+      } else {
+        setCredentialsError(res.message);
+        setValidationError([]);
+      }
     }
-    navigate("/");
   };
   return (
     <section className="flex flex-col gap-4 items-center justify-center m-auto p-4 w-dvw max-w-136">
@@ -32,6 +46,7 @@ const Login = () => {
             name="username"
             id="username"
             required
+            autoComplete="username"
             className="rounded-sm p-1 px-2 bg-dark-200 text-lg border"
           />
         </div>
@@ -42,6 +57,7 @@ const Login = () => {
             name="password"
             id="password"
             required
+            autoComplete="current-password"
             className="rounded-sm p-1 px-2 bg-dark-200 text-lg border"
           />
         </div>
@@ -51,6 +67,10 @@ const Login = () => {
             Sign Up
           </Link>
         </p>
+        <div className="flex flex-col justify-start gap-3 text-red-500">
+          {validationError && validationError.map((e) => <p>{e.message}</p>)}
+          {credentialsError && <p>{credentialsError}</p>}
+        </div>
         <div className="flex justify-end gap-5">
           <Link
             to="/"
@@ -62,7 +82,7 @@ const Login = () => {
             ref={btnRef}
             className="cursor-pointer py-2 px-6 rounded text-white bg-gray-800 hover:bg-gray-700 transition-all"
           >
-            Login
+            Log in
           </button>
         </div>
       </form>

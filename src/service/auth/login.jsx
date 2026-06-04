@@ -8,13 +8,9 @@ const LogUser = async (credentials) => {
       body: JSON.stringify(credentials),
     });
     const json = await res.json();
-    if (!res.ok) {
-      throw new Error(json.message);
-    }
-    return { error: null, token: json.data };
+    return json;
   } catch (err) {
-    console.error("service login error", err);
-    return { error: err, token: null };
+    console.error("service sign up error", err);
   }
 };
 
