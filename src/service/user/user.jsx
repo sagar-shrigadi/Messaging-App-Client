@@ -26,7 +26,7 @@ const useAllUsers = () => {
   }, []);
   return { users, error, loading };
 };
-const useGlobalMessages = () => {
+const useGlobalMessages = (refreshToggle) => {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -51,7 +51,7 @@ const useGlobalMessages = () => {
       }
     };
     fetchAllGlobalMessages();
-  }, []);
+  }, [refreshToggle]);
   return { messages, loading, error };
 };
 const useMessagesBetweenUsers = (userId, token) => {

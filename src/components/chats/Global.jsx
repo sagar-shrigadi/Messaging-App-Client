@@ -1,14 +1,50 @@
 import { SendHorizonal } from "lucide-react";
 import profile from "../../assets/defaultProfile.png";
 import { useGlobalMessages } from "../../service/user/user";
-import { useOutletContext } from "react-router";
+import { useNavigate, useOutletContext } from "react-router";
+import postMsgGlobal from "../../service/message/postMsgGlobal";
+import { useEffect, useRef, useState } from "react";
 
 const Global = () => {
-  const { user } = useOutletContext();
-  console.log("user info in global", user);
+  const { user, token } = useOutletContext();
+  // console.log("user info in global", user);
+  const [refreshToggle, setRefreshToggle] = useState(false);
 
-  const { messages, error, loading } = useGlobalMessages();
+  const { messages, error, loading } = useGlobalMessages(refreshToggle);
   //   console.log(messages);
+  let navigate = useNavigate();
+
+  const formRef = useRef(null);
+  const messagesEndRef = useRef(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  const postMsgHandler = async (e) => {
+    e.preventDefault();
+    if (!user?.id) {
+      navigate("/login");
+      return;
+    }
+    try {
+      const formData = new FormData(formRef.current);
+      const message = formData.get("message");
+
+      const res = await postMsgGlobal({ message }, token);
+
+      if (res.success) {
+        formRef.current?.reset();
+        setRefreshToggle((prev) => !prev);
+      }
+    } catch (error) {
+      alert(`some error occurered! please refresh the page! ${error}`);
+    }
+  };
 
   if (loading)
     return (
@@ -59,18 +95,27 @@ const Global = () => {
             </article>
           ),
         )}
+        <div ref={messagesEndRef} />
       </section>
-      <div className="flex justify-between items-center gap-4 p-2 min-h-10 border">
-        <form className="grow">
+      <div className="p-2 border">
+        <form
+          ref={formRef}
+          onSubmit={postMsgHandler}
+          className="flex justify-between items-center gap-4"
+        >
           <input
             type="text"
             name="message"
             id="message"
             placeholder="Send your message..."
-            className="border min-w-full py-1 px-2 rounded"
+            required
+            maxLength={100}
+            className="border grow py-1 px-2 rounded"
           />
+          <button className="cursor-pointer">
+            <SendHorizonal className="size-7" />
+          </button>
         </form>
-        <SendHorizonal className="size-7 cursor-pointer" />
       </div>
     </section>
   );
