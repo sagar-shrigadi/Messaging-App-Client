@@ -1,12 +1,13 @@
 import { useMessagesBetweenUsers } from "../../service/user/user";
 import profile from "../../assets/defaultProfile.png";
-import { ArrowLeft, SendHorizonal } from "lucide-react";
+import { ArrowLeft, EllipsisVertical, SendHorizonal } from "lucide-react";
 import { useNavigate, useOutletContext } from "react-router";
 import { useEffect, useRef, useState } from "react";
 import postMsgUser from "../../service/message/postMsgUser";
+import { deleteMsg } from "../../service/message/deleteMsg";
 
 const User = ({ isUserSelected, setIsUserSelected, usersChatToDisplay }) => {
-  console.log("in user chats component target user info", usersChatToDisplay);
+  // console.log("in user chats component target user info", usersChatToDisplay);
   const [refreshToggle, setRefreshToggle] = useState(false);
   const { user, token } = useOutletContext();
   const { messages, error, loading } = useMessagesBetweenUsers(
@@ -14,7 +15,7 @@ const User = ({ isUserSelected, setIsUserSelected, usersChatToDisplay }) => {
     token,
     refreshToggle,
   );
-  console.log("messages betwenn users", messages);
+  // console.log("messages betwenn users", messages);
 
   const formRef = useRef(null);
   const messageEndRef = useRef(null);
@@ -48,6 +49,25 @@ const User = ({ isUserSelected, setIsUserSelected, usersChatToDisplay }) => {
       }
     } catch (error) {
       alert(`some error occurered! please refresh the page! ${error}`);
+    }
+  };
+
+  const deleteMsgHandler = async (e, messageId) => {
+    e.preventDefault();
+
+    if (!window.confirm("Are you sure you want to delete this comment?")) {
+      return;
+    }
+    try {
+      const res = await deleteMsg(token, messageId);
+
+      if (res.success) {
+        setRefreshToggle((prev) => !prev);
+      } else {
+        alert(`delete error, ${res.message}`);
+      }
+    } catch (error) {
+      console.error("Delete Comment", error);
     }
   };
 
@@ -90,13 +110,30 @@ const User = ({ isUserSelected, setIsUserSelected, usersChatToDisplay }) => {
         )}
       </div>
       {isUserSelected ? (
-        <section className="max-h-[80dvh] sm:max-h-[unset] overflow-y-scroll border grow pb-2">
+        <section className="max-h-[80dvh] sm:max-h-[unset] overflow-y-scroll border grow py-2">
           {messages.map((msg) =>
             msg.authorId === user?.id ? (
               <article
                 key={msg.id}
-                className="flex flex-row-reverse py-1 px-3 items-center justify-start my-2"
+                className="flex flex-row-reverse gap-1 py-1 px-3 items-center justify-start my-2"
               >
+                <button
+                  className="cursor-pointer"
+                  popoverTarget={`${msg.id}'sPopover`}
+                  style={{ anchorName: `${msg.id}'sAnchor` }}
+                >
+                  <EllipsisVertical className="size-4" />
+                </button>
+                <div
+                  popover="auto"
+                  id={`${msg.id}'sPopover`}
+                  style={{ positionAnchor: `${msg.id}'sAnchor` }}
+                  className="absolute [position-area:top_left] m-0 min-h-10 bg-white px-6 py-1.5 border rounded shadow-md text-lg"
+                >
+                  <form onSubmit={(e) => deleteMsgHandler(e, msg.id)}>
+                    <button className="cursor-pointer">Delete</button>
+                  </form>
+                </div>
                 <h2 className="max-w-[28ch] sm:max-w-[40ch] font-bold rounded py-1 px-4 text-start bg-gray-200">
                   {msg.content}
                 </h2>
