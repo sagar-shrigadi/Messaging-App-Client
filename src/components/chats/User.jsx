@@ -128,13 +128,13 @@ const User = ({ isUserSelected, setIsUserSelected, usersChatToDisplay }) => {
                   popover="auto"
                   id={`${msg.id}'sPopover`}
                   style={{ positionAnchor: `${msg.id}'sAnchor` }}
-                  className="absolute [position-area:top_left] m-0 min-h-10 bg-white px-6 py-1.5 border rounded shadow-md text-lg"
+                  className="absolute [position-area:top_left] m-0 bg-white px-6 py-1.5 border rounded shadow-md text-base"
                 >
                   <form onSubmit={(e) => deleteMsgHandler(e, msg.id)}>
                     <button className="cursor-pointer">Delete</button>
                   </form>
                 </div>
-                <h2 className="max-w-[28ch] sm:max-w-[40ch] font-bold rounded py-1 px-4 text-start bg-gray-200">
+                <h2 className="max-w-[18ch] sm:max-w-[28ch] lg:max-w-[40ch] 2xl:max-w-[unset] font-bold rounded py-1 px-4 text-start bg-gray-200">
                   {msg.content}
                 </h2>
               </article>
@@ -143,7 +143,7 @@ const User = ({ isUserSelected, setIsUserSelected, usersChatToDisplay }) => {
                 key={msg.id}
                 className="flex gap-3 py-1 px-3 items-center justify-start"
               >
-                <h2 className="max-w-[28ch] sm:max-w-[40ch] font-bold rounded py-1 px-4 text-start bg-gray-200">
+                <h2 className="max-w-[18ch] sm:max-w-[28ch] lg:max-w-[40ch] 2xl:max-w-[unset] font-bold rounded py-1 px-4 text-start bg-gray-200">
                   {msg.content}
                 </h2>
               </article>

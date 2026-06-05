@@ -105,7 +105,7 @@ const Global = () => {
                 className="absolute [position-area:top_left] m-0 bg-white px-6 py-1.5 border rounded shadow-md text-base"
               >
                 <form onSubmit={(e) => deleteMsgHandler(e, msg.id)}>
-                  <button className="cursor-pointer ">Delete</button>
+                  <button className="cursor-pointer">Delete</button>
                 </form>
               </div>
               <h2 className="max-w-[18ch] sm:max-w-[28ch] lg:max-w-[40ch] 2xl:max-w-[unset] font-bold rounded py-1 px-4 text-start bg-gray-200 text-balance">
