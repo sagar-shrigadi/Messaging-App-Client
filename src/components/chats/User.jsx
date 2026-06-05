@@ -1,17 +1,55 @@
 import { useMessagesBetweenUsers } from "../../service/user/user";
 import profile from "../../assets/defaultProfile.png";
 import { ArrowLeft, SendHorizonal } from "lucide-react";
-import { useOutletContext } from "react-router";
+import { useNavigate, useOutletContext } from "react-router";
+import { useEffect, useRef, useState } from "react";
+import postMsgUser from "../../service/message/postMsgUser";
 
 const User = ({ isUserSelected, setIsUserSelected, usersChatToDisplay }) => {
   console.log("in user chats component target user info", usersChatToDisplay);
-
+  const [refreshToggle, setRefreshToggle] = useState(false);
   const { user, token } = useOutletContext();
   const { messages, error, loading } = useMessagesBetweenUsers(
     usersChatToDisplay.id,
     token,
+    refreshToggle,
   );
   console.log("messages betwenn users", messages);
+
+  const formRef = useRef(null);
+  const messageEndRef = useRef(null);
+  let navigate = useNavigate();
+
+  const scrollToBottom = () => {
+    messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  const postMsgHandler = async (e) => {
+    e.preventDefault();
+
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+    try {
+      const formData = new FormData(formRef.current);
+      const message = formData.get("message");
+
+      // usersChatToDisplay.id (id of the user whom the message is to be send)
+      const res = await postMsgUser(token, usersChatToDisplay.id, { message });
+
+      if (res.success) {
+        formRef.current?.reset();
+        setRefreshToggle((prev) => !prev);
+      }
+    } catch (error) {
+      alert(`some error occurered! please refresh the page! ${error}`);
+    }
+  };
 
   if (loading)
     return (
@@ -39,7 +77,7 @@ const User = ({ isUserSelected, setIsUserSelected, usersChatToDisplay }) => {
           <ArrowLeft className="size-6" />
         </button>
         {isUserSelected ? (
-          <div className="flex gap-3 p-1 items-center justify-start">
+          <div className="flex gap-3 items-center justify-start">
             <img
               src={profile}
               alt="default user avatar"
@@ -52,7 +90,7 @@ const User = ({ isUserSelected, setIsUserSelected, usersChatToDisplay }) => {
         )}
       </div>
       {isUserSelected ? (
-        <section className="overflow-y-scroll border grow py-2 flex flex-col gap-3">
+        <section className="max-h-[80dvh] sm:max-h-[unset] overflow-y-scroll border grow pb-2">
           {messages.map((msg) =>
             msg.authorId === user?.id ? (
               <article
@@ -74,6 +112,7 @@ const User = ({ isUserSelected, setIsUserSelected, usersChatToDisplay }) => {
               </article>
             ),
           )}
+          <div ref={messageEndRef} />
         </section>
       ) : (
         <section className="grid place-items-center grow pb-2 border">
@@ -82,18 +121,28 @@ const User = ({ isUserSelected, setIsUserSelected, usersChatToDisplay }) => {
           </h1>
         </section>
       )}
-      <div className="flex justify-between items-center gap-4 p-2 min-h-10">
-        <form className="grow">
-          <input
-            type="text"
-            name="message"
-            id="message"
-            placeholder="Send your message..."
-            className="border min-w-full py-1 px-2 rounded"
-          />
-        </form>
-        <SendHorizonal className="size-7 cursor-pointer" />
-      </div>
+      {usersChatToDisplay?.id && (
+        <div className="p-2 border">
+          <form
+            ref={formRef}
+            onSubmit={postMsgHandler}
+            className="flex justify-between items-center gap-4"
+          >
+            <input
+              type="text"
+              name="message"
+              id="message"
+              placeholder="Send your message..."
+              required
+              maxLength={100}
+              className="border grow py-1 px-2 rounded"
+            />
+            <button className="cursor-pointer">
+              <SendHorizonal className="size-7" />
+            </button>
+          </form>
+        </div>
+      )}
     </section>
   );
 };
