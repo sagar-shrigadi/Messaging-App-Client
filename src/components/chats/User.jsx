@@ -3,14 +3,14 @@ import profile from "../../assets/defaultProfile.png";
 import { ArrowLeft, EllipsisVertical, SendHorizonal } from "lucide-react";
 import { useNavigate, useOutletContext } from "react-router";
 import { useEffect, useRef, useState } from "react";
-import postMsgUser from "../../service/message/postMsgUser";
 import { deleteMsg } from "../../service/message/deleteMsg";
+import socket from "../../service/socket/socket";
 
 const User = ({ isUserSelected, setIsUserSelected, usersChatToDisplay }) => {
   // console.log("in user chats component target user info", usersChatToDisplay);
   const [refreshToggle, setRefreshToggle] = useState(false);
   const { user, token } = useOutletContext();
-  const { messages, error, loading } = useMessagesBetweenUsers(
+  const { messages, setMessages, error, loading } = useMessagesBetweenUsers(
     usersChatToDisplay.id,
     token,
     refreshToggle,
@@ -29,7 +29,19 @@ const User = ({ isUserSelected, setIsUserSelected, usersChatToDisplay }) => {
     scrollToBottom();
   }, [messages]);
 
-  const postMsgHandler = async (e) => {
+  useEffect(() => {
+    socket.emit("join-private", {
+      userOne: user.id,
+      userTwo: usersChatToDisplay.id,
+    });
+    socket.on("private", (newMsg) => {
+      setMessages((prev) => [...prev, newMsg]);
+    });
+
+    return () => socket.off("private");
+  }, [setMessages, user?.id, usersChatToDisplay?.id]);
+
+  const postMsgHandler = async (e, targetUserId) => {
     e.preventDefault();
 
     if (!token) {
@@ -40,13 +52,8 @@ const User = ({ isUserSelected, setIsUserSelected, usersChatToDisplay }) => {
       const formData = new FormData(formRef.current);
       const message = formData.get("message");
 
-      // usersChatToDisplay.id (id of the user whom the message is to be send)
-      const res = await postMsgUser(token, usersChatToDisplay.id, { message });
-
-      if (res.success) {
-        formRef.current?.reset();
-        setRefreshToggle((prev) => !prev);
-      }
+      socket.emit("private", { token, message, targetUserId });
+      formRef.current?.reset();
     } catch (error) {
       alert(`some error occurered! please refresh the page! ${error}`);
     }
@@ -162,7 +169,7 @@ const User = ({ isUserSelected, setIsUserSelected, usersChatToDisplay }) => {
         <div className="p-2 border">
           <form
             ref={formRef}
-            onSubmit={postMsgHandler}
+            onSubmit={(e) => postMsgHandler(e, usersChatToDisplay.id)}
             className="flex justify-between items-center gap-4"
           >
             <input

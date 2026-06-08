@@ -2,16 +2,17 @@ import { EllipsisVertical, SendHorizonal } from "lucide-react";
 import profile from "../../assets/defaultProfile.png";
 import { useGlobalMessages } from "../../service/user/user";
 import { useNavigate, useOutletContext } from "react-router";
-import postMsgGlobal from "../../service/message/postMsgGlobal";
 import { useEffect, useRef, useState } from "react";
 import { deleteMsg } from "../../service/message/deleteMsg";
+import socket from "../../service/socket/socket";
 
 const Global = () => {
   const { user, token } = useOutletContext();
   // console.log("user info in global", user);
   const [refreshToggle, setRefreshToggle] = useState(false);
 
-  const { messages, error, loading } = useGlobalMessages(refreshToggle);
+  const { messages, setMessages, error, loading } =
+    useGlobalMessages(refreshToggle);
   //   console.log(messages);
   let navigate = useNavigate();
 
@@ -26,6 +27,13 @@ const Global = () => {
     scrollToBottom();
   }, [messages]);
 
+  useEffect(() => {
+    socket.on("global", (newMsg) => {
+      setMessages((prev) => [...prev, newMsg]);
+    });
+    return () => socket.off("global");
+  }, [setMessages]);
+
   const postMsgHandler = async (e) => {
     e.preventDefault();
     if (!user?.id) {
@@ -36,12 +44,8 @@ const Global = () => {
       const formData = new FormData(formRef.current);
       const message = formData.get("message");
 
-      const res = await postMsgGlobal({ message }, token);
-
-      if (res.success) {
-        formRef.current?.reset();
-        setRefreshToggle((prev) => !prev);
-      }
+      socket.emit("global", { token, message });
+      formRef.current?.reset();
     } catch (error) {
       alert(`some error occurered! please refresh the page! ${error}`);
     }

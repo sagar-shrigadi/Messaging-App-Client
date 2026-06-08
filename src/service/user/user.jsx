@@ -52,7 +52,7 @@ const useGlobalMessages = (refreshToggle) => {
     };
     fetchAllGlobalMessages();
   }, [refreshToggle]);
-  return { messages, loading, error };
+  return { messages, setMessages, loading, error };
 };
 const useMessagesBetweenUsers = (userId, token, refreshToggle) => {
   const [messages, setMessages] = useState([]);
@@ -86,6 +86,6 @@ const useMessagesBetweenUsers = (userId, token, refreshToggle) => {
     };
     fetchAllGlobalMessages();
   }, [userId, token, refreshToggle]);
-  return { messages, loading, error };
+  return { messages, setMessages, loading, error };
 };
 export { useAllUsers, useGlobalMessages, useMessagesBetweenUsers };
