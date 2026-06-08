@@ -7,7 +7,6 @@ import { deleteMsg } from "../../service/message/deleteMsg";
 import socket from "../../service/socket/socket";
 
 const User = ({ isUserSelected, setIsUserSelected, usersChatToDisplay }) => {
-  // console.log("in user chats component target user info", usersChatToDisplay);
   const [refreshToggle, setRefreshToggle] = useState(false);
   const { user, token } = useOutletContext();
   const { messages, setMessages, error, loading } = useMessagesBetweenUsers(
@@ -15,7 +14,6 @@ const User = ({ isUserSelected, setIsUserSelected, usersChatToDisplay }) => {
     token,
     refreshToggle,
   );
-  // console.log("messages betwenn users", messages);
 
   const formRef = useRef(null);
   const messageEndRef = useRef(null);

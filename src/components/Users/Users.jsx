@@ -10,7 +10,6 @@ const Users = ({
 }) => {
   const { user } = useOutletContext();
   const { users, error, loading } = useAllUsers();
-  // console.log(users);
 
   if (loading)
     return (

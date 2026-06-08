@@ -24,7 +24,6 @@ const Login = () => {
       navigate("/");
     } else {
       btnRef.current.textContent = "Log in";
-      // console.log("errors in login b4 state", res);
 
       if (res.message === "Validation Failed!") {
         setCredentialsError("");

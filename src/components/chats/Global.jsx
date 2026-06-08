@@ -8,12 +8,10 @@ import socket from "../../service/socket/socket";
 
 const Global = () => {
   const { user, token } = useOutletContext();
-  // console.log("user info in global", user);
   const [refreshToggle, setRefreshToggle] = useState(false);
 
   const { messages, setMessages, error, loading } =
     useGlobalMessages(refreshToggle);
-  //   console.log(messages);
   let navigate = useNavigate();
 
   const formRef = useRef(null);
