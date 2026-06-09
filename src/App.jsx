@@ -14,7 +14,7 @@ function App() {
       try {
         if (token !== null) {
           const getUser = await fetch(
-            `${import.meta.env.VITE_SERVER_URL}/users/me`,
+            `${import.meta.env.VITE_BASE_URL}/users/me`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
