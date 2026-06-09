@@ -45,7 +45,7 @@ const useGlobalMessages = (refreshToggle) => {
         setMessages(json.data);
       } catch (err) {
         console.error("service get all global messages", err);
-        setError(err);
+        setError(err.message);
       } finally {
         setLoading(false);
       }
@@ -79,7 +79,7 @@ const useMessagesBetweenUsers = (userId, token, refreshToggle) => {
         setMessages(json.data);
       } catch (err) {
         console.error("service get all global messages", err);
-        setError(err);
+        setError(err.message);
       } finally {
         setLoading(false);
       }

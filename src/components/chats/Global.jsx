@@ -77,7 +77,7 @@ const Global = () => {
     return (
       <section>
         <ul>
-          <li>{error}</li>
+          <li>{error || "something went wrong! please refresh the page!"}</li>
         </ul>
       </section>
     );
