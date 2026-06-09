@@ -8,7 +8,7 @@ const useAllUsers = () => {
   useEffect(() => {
     const fetchAllUsers = async () => {
       try {
-        const res = await fetch(`${import.meta.env.VITE_SERVER_URL}/users`);
+        const res = await fetch(`${import.meta.env.VITE_BASE_URL}/users`);
         const json = await res.json();
 
         if (!res.ok) {
@@ -35,7 +35,7 @@ const useGlobalMessages = (refreshToggle) => {
     const fetchAllGlobalMessages = async () => {
       try {
         const res = await fetch(
-          `${import.meta.env.VITE_SERVER_URL}/chats/global`,
+          `${import.meta.env.VITE_BASE_URL}/chats/global`,
         );
         const json = await res.json();
 
@@ -63,7 +63,7 @@ const useMessagesBetweenUsers = (userId, token, refreshToggle) => {
       try {
         if (userId === undefined) return { messages: false };
         const res = await fetch(
-          `${import.meta.env.VITE_SERVER_URL}/chats/users/${userId}`,
+          `${import.meta.env.VITE_BASE_URL}/chats/users/${userId}`,
           {
             method: "GET",
             headers: {

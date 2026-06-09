@@ -1,7 +1,7 @@
 const postMsgUser = async (token, userId, message) => {
   try {
     const res = await fetch(
-      `${import.meta.env.VITE_SERVER_URL}/chats/users/${userId}`,
+      `${import.meta.env.VITE_BASE_URL}/chats/users/${userId}`,
       {
         method: "POST",
         headers: {

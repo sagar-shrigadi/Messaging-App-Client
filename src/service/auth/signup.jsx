@@ -1,6 +1,6 @@
 const SignUpUser = async (credentials) => {
   try {
-    const res = await fetch(`${import.meta.env.VITE_SERVER_URL}/auth/signup`, {
+    const res = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/signup`, {
       method: "POST",
       headers: {
         "Content-type": "application/json",

@@ -1,6 +1,6 @@
 const postMsgGlobal = async (message, token) => {
   try {
-    const res = await fetch(`${import.meta.env.VITE_SERVER_URL}/chats/global`, {
+    const res = await fetch(`${import.meta.env.VITE_BASE_URL}/chats/global`, {
       method: "POST",
       headers: {
         "Content-type": "application/json",

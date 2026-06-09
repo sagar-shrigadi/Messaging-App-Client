@@ -1,7 +1,7 @@
 export const deleteMsg = async (token, messageId) => {
   try {
     const res = await fetch(
-      `${import.meta.env.VITE_SERVER_URL}/messages/${messageId}`,
+      `${import.meta.env.VITE_BASE_URL}/messages/${messageId}`,
       {
         method: "DELETE",
         headers: {
