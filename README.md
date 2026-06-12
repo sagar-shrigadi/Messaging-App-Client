@@ -1,16 +1,38 @@
-# React + Vite
+# Messaging Client App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+The repository serves as a frontend client for the Messaging App (REST API) [Backend repo](https://github.com/sagar-shrigadi/Messaging-App), built with react.
 
-Currently, two official plugins are available:
+## 🛠️ Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **Framework:** React (Vite)
+- **Styling:** Tailwind CSS
 
-## React Compiler
+## 🚀 Quick Start
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Installation
 
-## Expanding the ESLint configuration
+```bash
+git clone git@github.com:sagar-shrigadi/Messaging-App-Client.git
+cd Messaging-App-Client
+npm install
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Environment Setup
+
+- Create a .env file in the root directory and copy all variables from .env.example file
+
+Note: The following two env variables might be same for you, according to your route implementations (on backend).
+
+```env
+VITE_SERVER_URL
+```
+
+```env
+VITE_BASE_URL
+```
+
+### Run Deployment Server
+
+```bash
+npm run dev
+```
