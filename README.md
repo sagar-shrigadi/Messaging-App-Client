@@ -2,6 +2,10 @@
 
 The repository serves as a frontend client for the Messaging App (REST API) [Backend repo](https://github.com/sagar-shrigadi/Messaging-App), built with react.
 
+## 🔗 Links
+
+- Live site can be found [here](https://messaging-client.pages.dev/).
+
 ## 🛠️ Tech Stack
 
 - **Framework:** React (Vite)
